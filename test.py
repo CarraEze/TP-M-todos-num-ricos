@@ -1,20 +1,36 @@
-import sympy as sy
+import sympy as sp
+def newton(f, x0, variable_str='x'):
+    x = sp.symbols(variable_str)
+    f_derivada = sp.diff(f,x)
 
-def cuadrado(x1,x2,n):
-    for i in range (0,n):
-        x2 = x2*x1
-        print(x2)
+    for i in range(0,10):
+        f_x0 = f.subs(x, x0)
+        f_derivada_x0 = f_derivada.subs(x, x0)
+        x0 = float(x0 - (f_x0 / f_derivada_x0))
+    print(f"Nuevo punto: {x0}")
 
-def iterar(x,x1,y,n):
-    for i in range(0,n):
-        x = x1 -(y.subs(x1)/y.diff(x).subs(x1))
-        x1 = x
-    return x
+def triseccion(f, a, b, variable_str='x'):
+    x = sp.symbols(variable_str)
 
-x = sy.Symbol("x")
-x1 = sy.sympify(input("Ingrese un numero como punto de inicio"))
-x2 = 1
-y = sy.sympify(input("ingresa tu funcion "))
-n = sy.sympify(input("ingresa un numero de iteraciones"))
-print(iterar(x1,x2,y,n))
+    for i in range(0,3):
+        x1 = a + (b - a) / 3
+        x2 = a + 2 * (b - a) / 3
+        f_x1 = f.subs(x, x1)
+        f_x2 = f.subs(x, x2)
+
+        if f_x1 > f_x2:
+            a, b = x1, b
+        else:
+            a, b = a, x2
+    print(f"Nuevo intervalo: [{a}, {b}]")
+    newton(f, b)
+
+a = input("Ingrese el punto inicial")
+b = input("Ingrese el punto final")
+a = sp.sympify(a)
+b = sp.sympify(b)
+funcion = "x - 430"
+f = sp.sympify(funcion)
+triseccion(f, a, b)
+
 
